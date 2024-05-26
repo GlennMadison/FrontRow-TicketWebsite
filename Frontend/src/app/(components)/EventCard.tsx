@@ -12,14 +12,14 @@ import {
 
 export function EventCard() {
     return (
-        <Card className="w-[350px]">
+        <Card >
             <CardHeader>
                 <img
-                    className=""
+                    className="rounded-lg w-full h-48  object-cover"
                     src="https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/ss/1715920542_Om8rLV.png"
                     alt=""
                 />
-                <CardTitle>Ignite Your Thrills</CardTitle>
+                <CardTitle className="py-2">Ignite Your Thrills</CardTitle>
                 <CardDescription>28 Jul 2024</CardDescription>
                 <CardDescription className="font-bold">
                     Rp. 1.277.000
@@ -27,8 +27,8 @@ export function EventCard() {
             </CardHeader>
             <CardContent></CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button>Deploy</Button>
+                <Button>Daftar</Button>
+                <Button variant="outline">Detail</Button>
             </CardFooter>
         </Card>
     );

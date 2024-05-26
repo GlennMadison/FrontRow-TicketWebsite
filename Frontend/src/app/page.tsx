@@ -1,14 +1,20 @@
 import React from "react";
-import Navbar from "./(components)/navbar";
 import Hero from "./(components)/Hero";
-import { EventCard } from "./(components)/EventCard"; 
+import Navbar from "./(components)/navbar";
+import Footer from "./(components)/Footer";
+import { EventCategory } from "./(components)/EventCategory";
+import { PopularEvent } from "./(components)/PopularEvent";
+
 
 export default function Home() {
   return (
-    <div> 
+    <div className="font-poppins"> 
       <Navbar />
       <Hero />
-      <EventCard />
+      <PopularEvent />
+      <EventCategory />
+      <div className="bg-white h-screen"></div>
+      <Footer />
     </div>
   );
 }
