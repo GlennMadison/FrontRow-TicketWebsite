@@ -1,30 +1,94 @@
+"use client";
 import { CarouselSingular } from "./CarouselSingular";
 import { CarouselMultiple } from "./CarouselMultiple";
 import { EventCard } from "./EventCard";
 import { Banner } from "./Banner";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
+interface Ticket {
+  ID: string;
+  category: string;
+  price: number;
+  quantity: number;
+}
+
+interface Event {
+  ID: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  image_url: string;
+  description: string;
+  location: string;
+  available_ticket: number;
+  tickets: Ticket[];
+  publishername: string;
+}
+
+interface EventCardProps {
+  event: Event | undefined;
+}
 export default function Hero() {
-    return (
-        <div className="bg-white  h-auto flex justify-center items-center">
-            <div className="flex flex-col justify-between items-center p-4 ">
-                <div className="py-3">
-                    <CarouselSingular></CarouselSingular>
-                </div>
-                <div className="  ">
-                    <h1 className="text-primaryred font-bold text-3xl pb-2 px-8">
-                        Event Pilihan
-                    </h1>
-                    <CarouselMultiple>
-                        <div className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600">
-                            <EventCard />
-                        </div>
-                    </CarouselMultiple>
-                </div>
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-                <div>
-                    <Banner src="https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/temporary/20240513/1715595700_AENa5W.jpg"></Banner>
-                </div>
-            </div>
+  useEffect(() => {
+    axios
+      .get<Event | Event[]>("http://localhost:5000/events")
+      .then((response) => {
+        const eventData = response.data.data;
+        console.log("Event data:", eventData);
+        setEvents(eventData);
+      })
+      .catch((error) => {
+        console.error("There was an error fetching the events!", error);
+        setError("There was an error fetching the events");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log("Events:", events);
+  }, [events]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <div className="bg-white h-auto flex justify-center items-center">
+      <div className="flex flex-col justify-between items-center p-4">
+        <div className="py-3">
+          <CarouselSingular />
         </div>
-    );
+        <div>
+          <h1 className="text-primaryred font-bold text-3xl pb-2 px-8">
+            Event Pilihan
+          </h1>
+          <CarouselMultiple>
+            {events.map((event) => (
+              <div
+                key={event.ID}
+                className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"
+              >
+                <EventCard event={event} />
+              </div>
+            ))}
+          </CarouselMultiple>
+        </div>
+
+        <div>
+          <Banner src="https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/temporary/20240513/1715595700_AENa5W.jpg" />
+        </div>
+      </div>
+    </div>
+  );
 }

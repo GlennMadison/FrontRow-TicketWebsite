@@ -1,5 +1,6 @@
-import * as React from "react";
+"use client"; // Add this line at the top
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -10,22 +11,61 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-export function EventCard() {
+interface Ticket {
+    ID: string;
+    category: string;
+    price: number;
+    quantity: number;
+}
+
+interface Event {
+    ID: string;
+    title: string;
+    start_date: string;
+    end_date: string;
+    image_url: string;
+    description: string;
+    location: string;
+    available_ticket: number;
+    tickets: Ticket[];
+    publishername: string;
+}
+
+
+interface EventCardProps {
+    event: Event | undefined;
+}
+
+export function EventCard({ event }: EventCardProps) {
+    // Check if event is undefined or has missing properties
+    if (!event) {
+        console.error("Event is undefined or has missing properties!");
+        return null;
+    }
+    
+    const { image_url, title, start_date, description, location} = event;
+
+    const formattedDate = new Date(start_date).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+    });
+
     return (
-        <Card >
+        <Card>
             <CardHeader>
                 <img
-                    className="rounded-lg w-full h-48  object-cover"
-                    src="https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/ss/1715920542_Om8rLV.png"
-                    alt=""
+                    className="rounded-lg w-full h-48 object-cover"
+                    src={image_url}
+                    alt={title}
                 />
-                <CardTitle className="py-2">Ignite Your Thrills</CardTitle>
-                <CardDescription>28 Jul 2024</CardDescription>
-                <CardDescription className="font-bold">
-                    Rp. 1.277.000
-                </CardDescription>
+                <CardTitle className="py-2">{title}</CardTitle>
+                <CardDescription>{formattedDate}</CardDescription>
             </CardHeader>
-            <CardContent></CardContent>
+            <CardContent>
+                <CardDescription>{description}</CardDescription>
+                <CardDescription>{location}</CardDescription>
+            </CardContent>
             <CardFooter className="flex justify-between">
                 <Button>Daftar</Button>
                 <Button variant="outline">Detail</Button>

@@ -9,11 +9,9 @@ export function EventCategory() {
                 </h1>
                 <div>
                     <CarouselMultiple carouselItemClass="md:basis-1/2 lg:basis-1/6">
-                        <div className="group drop-shadow-lg relative m-2 hover:m-0 transition-all rounded-lg bg-cover bg-center aspect-square flex items-end justify-center bg-[url('https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/temporary/20231122/1700651289_29NSBm.jpg')]">
+                        <div className="group drop-shadow-lg relative m-2 hover:m-0 transition-all rounded-lg bg-cover bg-center aspect-square flex items-end justify-center">
                             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-50 transition-opacity rounded-lg"></div>
-                            <h1 className="relative py-4 z-10 text-white text-3xl">
-                                Festival
-                            </h1>
+                            
                         </div>
                     </CarouselMultiple>
                 </div>
