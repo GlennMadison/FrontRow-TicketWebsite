@@ -1,16 +1,16 @@
 "use client";
-import Hero from "./(components)/Sections/Hero";
-import { EventCategory } from "./(components)/Sections/EventCategory";
-import { PopularEvent } from "./(components)/Sections/PopularEvent";
-
+import { CarouselSingular } from "../CarouselSingular";
+import { CarouselMultiple } from "../CarouselMultiple";
+import { EventCard } from "../EventCard";
+import { Banner } from "./Banner";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 interface Ticket {
-  ID: string;
-  category: string;
-  price: number;
-  quantity: number;
+    ID: string;
+    category: string;
+    price: number;
+    quantity: number;
 }
 
 interface Event {
@@ -26,7 +26,10 @@ interface Event {
     publishername: string;
 }
 
-export default function Home() {
+interface EventCardProps {
+    event: Event | undefined;
+}
+export default function Hero() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -61,11 +64,26 @@ export default function Home() {
     }
 
     return (
-        <div className="font-poppins bg-primarycolor ">
-            <Hero />
-            <PopularEvent />
-            <EventCategory />
-            <div className="h-screen"></div>
+        <div className="h-auto flex justify-center items-center">
+            <div className="flex flex-col   justify-between items-center p-4">
+                <div className="py-3  ">
+                    <CarouselSingular />
+                </div>
+                <div>
+                    <h1 className="text-white font-bold text-3xl pb-2 px-8">
+                        Featured Events
+                    </h1>
+                    <CarouselMultiple>
+                        {events.map((event) => (
+                            <EventCard event={event} />
+                        ))}
+                    </CarouselMultiple>
+                </div>
+
+                <div>
+                    <Banner src="https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/temporary/20240513/1715595700_AENa5W.jpg" />
+                </div>
+            </div>
         </div>
     );
 }

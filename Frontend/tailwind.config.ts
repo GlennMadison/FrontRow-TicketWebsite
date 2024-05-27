@@ -22,13 +22,13 @@ const config = {
                 poppins: ["Poppins", "sans-serif"],
             },
             colors: {
-                primaryred : "#6D071A",
-                bgbeige : "#141414",
+                primarycolor : "#131313",
+                secondarycolor : "#FFC94A",
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
                 ring: "hsl(var(--ring))",
-                background: "hsl(var(--background))",
-                foreground: "hsl(var(--foreground))",
+                background: "#131313",
+                foreground: "#2c2c34",
                 primary: {
                     // DEFAULT: "hsl(var(--primary))",
                     DEFAULT: "#b6433e",

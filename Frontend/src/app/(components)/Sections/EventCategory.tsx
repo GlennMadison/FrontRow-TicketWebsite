@@ -1,4 +1,6 @@
-import { CarouselMultiple } from "./CarouselMultiple";
+import { CarouselMultiple } from "../CarouselMultiple";
+
+
 
 export function EventCategory() {
     return (

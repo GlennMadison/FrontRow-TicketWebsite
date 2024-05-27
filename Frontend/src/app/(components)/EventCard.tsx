@@ -31,7 +31,6 @@ interface Event {
     publishername: string;
 }
 
-
 interface EventCardProps {
     event: Event | undefined;
 }
@@ -42,8 +41,9 @@ export function EventCard({ event }: EventCardProps) {
         console.error("Event is undefined or has missing properties!");
         return null;
     }
-    
-    const { image_url, title, start_date, description, location} = event;
+
+    const { image_url, title, start_date, description, location, tickets } =
+        event;
 
     const formattedDate = new Date(start_date).toLocaleDateString("en-US", {
         day: "numeric",
@@ -52,23 +52,29 @@ export function EventCard({ event }: EventCardProps) {
     });
 
     return (
-        <Card>
-            <CardHeader>
+        <Card className="w-[350px] flex flex-col bg-secondarycolor shadow-lg shadow-secondarycolor border-none">
+            <CardHeader className="flex flex-col ">
                 <img
-                    className="rounded-lg w-full h-48 object-cover"
+                    className="rounded-lg  "
                     src={image_url}
                     alt={title}
                 />
-                <CardTitle className="py-2">{title}</CardTitle>
-                <CardDescription>{formattedDate}</CardDescription>
+                <CardTitle className="text-primaryblack pt-2 text text-lg font-bold w-full truncate">
+                    {title}
+                </CardTitle>
+                <CardDescription className="text-md text-primaryblack">
+                    <div className="truncate">{location}</div>
+                    <div className="flex justify-between items-center pt-5">
+                        <div className="font-semibold">a</div>
+                        <div>{formattedDate}</div>
+                    </div>
+                </CardDescription>
             </CardHeader>
-            <CardContent>
-                <CardDescription>{description}</CardDescription>
-                <CardDescription>{location}</CardDescription>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button>Daftar</Button>
-                <Button variant="outline">Detail</Button>
+            <CardFooter className="flex justify-end">
+                {/* <Button className="w-24 bg-primaryred">Daftar</Button> */}
+                <Button variant="outline" className="w-24 ">
+                    Detail
+                </Button>
             </CardFooter>
         </Card>
     );

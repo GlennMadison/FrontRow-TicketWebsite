@@ -11,7 +11,7 @@ import {
 
 export function CarouselMultiple({
   children,
-  carouselItemClass = "md:basis-1/2 lg:basis-1/4",
+  carouselItemClass = " md:basis-1/3 lg:basis-1/4 ",
 }: {
   children: React.ReactNode;
   carouselItemClass?: string;
@@ -20,13 +20,15 @@ export function CarouselMultiple({
     <Carousel
       opts={{
         align: "start",
+        
       }}
-      className="w-full max-w-6xl"
+      className="w-[80vw]"
     >
       <CarouselContent>
         {React.Children.map(children, (child, index) => (
           <CarouselItem key={index} className={carouselItemClass}>
             {child}
+            
           </CarouselItem>
         ))}
       </CarouselContent>

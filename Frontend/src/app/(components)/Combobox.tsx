@@ -44,12 +44,12 @@ export function Combobox() {
 
     return (
         <div className="flex items-center space-x-4">
-            <p className="text-3xl text-muted-foreground">Popular Event in</p>
+            <p className="text-3xl text-white font-semibold">Popular Event in</p>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
-                        className="w-[150px] justify-start"
+                        className="justify-center  bg-primarycolor text-white text-2xl border-secondarycolor border-2 "
                     >
                         {selectedStatus ? (
                             <>{selectedStatus.label}</>
@@ -58,7 +58,7 @@ export function Combobox() {
                         )}
                     </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0" side="right" align="start">
+                <PopoverContent className="p-0 " side="right" align="start">
                     <Command>
                         <CommandInput placeholder="Cari Lokasi..." />
                         <CommandList>
@@ -78,9 +78,9 @@ export function Combobox() {
                                             setOpen(false);
                                         }}
                                     >
-                                        <div className="flex py-2 group">
-                                            <MapPin size={20} className="opacity-50 group-hover:text-blue-400 transition-colors" />
-                                            <div className="px-2 group-hover:text-blue-400  transition-colors">{status.label}</div>
+                                        <div className="flex py-2 group ">
+                                            <MapPin size={20} className="opacity-50 group-hover:text-secondarycolor transition-colors" />
+                                            <div className="px-2 group-hover:text-secondarycolor  transition-colors">{status.label}</div>
                                         </div>
                                     </CommandItem>
                                 ))}

@@ -1,16 +1,14 @@
-"use client";
-import Hero from "./(components)/Sections/Hero";
-import { EventCategory } from "./(components)/Sections/EventCategory";
-import { PopularEvent } from "./(components)/Sections/PopularEvent";
+import { Combobox } from "../Combobox";
+import { EventCard } from "../EventCard";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 interface Ticket {
-  ID: string;
-  category: string;
-  price: number;
-  quantity: number;
+    ID: string;
+    category: string;
+    price: number;
+    quantity: number;
 }
 
 interface Event {
@@ -23,10 +21,13 @@ interface Event {
     location: string;
     available_ticket: number;
     tickets: Ticket[];
-    publishername: string;
 }
 
-export default function Home() {
+interface EventCardProps {
+    event: Event | undefined;
+}
+
+export function PopularEvent() {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -59,13 +60,23 @@ export default function Home() {
     if (error) {
         return <div>{error}</div>;
     }
-
     return (
-        <div className="font-poppins bg-primarycolor ">
-            <Hero />
-            <PopularEvent />
-            <EventCategory />
-            <div className="h-screen"></div>
+        <div className="h-auto flex justify-center items-center">
+            <div className="flex-col justify-center  p-4 overflow-hidden w-[80vw] rounded-2xl">
+                <div className="px-4 py-3">
+                    <Combobox />
+                </div>
+                <div className="flex justify-between">
+                    {events.slice(0, 4).map((event) => (
+                        <div
+                            key={event.ID}
+                            className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"
+                        >
+                            <EventCard event={event} />
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }
