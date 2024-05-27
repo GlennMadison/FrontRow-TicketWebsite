@@ -16,7 +16,7 @@ import (
 var validateEvent = validator.New()
 var eventCollection *mongo.Collection = OpenCollection(Client, "Event")
 var ticketCollection *mongo.Collection = OpenCollection(Client, "Ticket")
-
+var descriptionCollection *mongo.Collection = OpenCollection(Client, "Description")
 // CreateEvent creates a new event
 func CreateEvent(c *gin.Context) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -31,6 +31,10 @@ func CreateEvent(c *gin.Context) {
     for i := range event.Tickets {
         event.Tickets[i].ID = primitive.NewObjectID()
     }
+
+	for i:= range event.Description {
+		event.Description[i].EventID = event.ID
+	}
 	// check if the event is valid
 	if err := validateEvent.Struct(event); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -50,9 +54,17 @@ func CreateEvent(c *gin.Context) {
 
 	res, err := ticketCollection.InsertMany(ctx, ticketInterfaces)
 
+	var descriptionInterfaces []interface{}
+	for _, description := range event.Description {
+    	descriptionInterfaces = append(descriptionInterfaces, description)
+	}
+
+	res2, err := descriptionCollection.InsertMany(ctx, descriptionInterfaces)
+
 	defer cancel()
 	c.JSON(http.StatusOK, gin.H{"data": result})
 	c.JSON(http.StatusOK, gin.H{"data Ticket": res})
+	c.JSON(http.StatusOK, gin.H{"data Ticket": res2})
 }
 
 func GetEvents(c *gin.Context) {

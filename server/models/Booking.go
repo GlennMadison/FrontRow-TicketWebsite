@@ -13,8 +13,4 @@ type Booking struct{
 	TotalTicket *int				`json:"total_ticket"`
 	BookingDate time.Time				`json:"booking_date"`
 	Tickets 	[]BookingTicket			`json:"tickets"`
-	
-	// PaymentDate time.Time			`json:"payment_date"`
-	// PaymentType *string				`json:"payment_type"`
-	// PaymentStatus *string			`json:"payment_status"`
 }
