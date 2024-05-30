@@ -3,6 +3,7 @@ package routes
 import (
 	"context"
 	"go-backend/models"
+	database "go-backend/database"
 	"net/http"
 	"time"
 
@@ -14,9 +15,9 @@ import (
 )
 
 var validateEvent = validator.New()
-var eventCollection *mongo.Collection = OpenCollection(Client, "Event")
-var ticketCollection *mongo.Collection = OpenCollection(Client, "Ticket")
-var descriptionCollection *mongo.Collection = OpenCollection(Client, "Description")
+var eventCollection *mongo.Collection = database.OpenCollection(database.Client, "Event")
+var ticketCollection *mongo.Collection = database.OpenCollection(database.Client, "Ticket")
+var descriptionCollection *mongo.Collection = database.OpenCollection(database.Client, "Description")
 // CreateEvent creates a new event
 func CreateEvent(c *gin.Context) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)

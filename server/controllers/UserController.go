@@ -3,9 +3,9 @@ package routes
 import (
 	"context"
 	"go-backend/models"
+	database "go-backend/database"
 	"net/http"
 	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,7 +14,7 @@ import (
 )
 
 var validate = validator.New()
-var accountCollection *mongo.Collection = OpenCollection(Client, "User")
+var accountCollection *mongo.Collection = database.OpenCollection(database.Client, "User")
 
 // CreateAccount creates a new account
 func CreateAccount(c *gin.Context) {
@@ -78,15 +78,14 @@ func LoginAccount(c *gin.Context) {
 			return
 		}
 	
-		err := accountCollection.FindOne(ctx, bson.M{"username": account.Username, "password": account.Password}).Decode(&account)
+		err := accountCollection.FindOne(ctx, bson.M{"email": account.Email, "password": account.Password}).Decode(&account)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 	
 		defer cancel()
-		c.JSON(http.StatusOK, gin.H{"data": account})
-		c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
+		c.JSON(http.StatusOK, gin.H{"LoginInfo": account})
 }
 
 func DeleteAccount(c *gin.Context) {

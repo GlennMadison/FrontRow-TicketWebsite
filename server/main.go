@@ -18,22 +18,9 @@ func main() {
 	router.Use(gin.Logger())	// Log all requests to the console
 	router.Use(cors.Default()) 			// Enable CORS for all origins
 
-	// User routes
-	router.POST("/register", routes.CreateAccount)
-	router.GET("/account/:id", routes.GetAccount)
-	router.PUT("account/login", routes.LoginAccount)
-	router.PUT("/account/update/:id", routes.UpdateAccount)
-	router.DELETE("/account/delete/:id", routes.DeleteAccount)
-
-	// Booking routes
-	router.POST("/order", routes.CreateOrder)
-	router.GET("/orders", routes.GetOrders)
-	router.DELETE("/order/:id", routes.DeleteOrder)
-
-	// Event routes
-	router.POST("/event", routes.CreateEvent)
-	router.GET("/events", routes.GetEvents)
-	router.DELETE("/event/:id", routes.DeleteEvent)
+	routes.UserRoutes(router)
+	routes.EventRoutes(router)
+	routes.BookingRoutes(router)
 	
 
 	router.Run(":" + port)

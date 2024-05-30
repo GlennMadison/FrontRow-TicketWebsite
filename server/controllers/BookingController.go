@@ -3,6 +3,7 @@ package routes
 import (
 	"context"
 	"go-backend/models"
+	database "go-backend/database"
 	"net/http"
 	"time"
 
@@ -14,8 +15,9 @@ import (
 )
 
 var validateOrder = validator.New()
-var orderCollection *mongo.Collection = OpenCollection(Client, "Booking")
-var bookingTicketCollection *mongo.Collection = OpenCollection(Client, "BookingTicket")
+
+var orderCollection *mongo.Collection = database.OpenCollection(database.Client, "Booking")
+var bookingTicketCollection *mongo.Collection = database.OpenCollection(database.Client, "BookingTicket")
 
 func CreateOrder(c *gin.Context) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)

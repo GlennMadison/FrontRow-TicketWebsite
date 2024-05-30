@@ -51,9 +51,6 @@ export default function Hero() {
             });
     }, []);
 
-    useEffect(() => {
-        console.log("Events:", events);
-    }, [events]);
 
     if (loading) {
         return <div>Loading...</div>;
