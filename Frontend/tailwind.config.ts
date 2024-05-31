@@ -1,5 +1,12 @@
 import type { Config } from "tailwindcss";
 
+const defaultTheme = require("tailwindcss/defaultTheme");
+
+const colors = require("tailwindcss/colors");
+const {
+    default: flattenColorPalette,
+} = require("tailwindcss/lib/util/flattenColorPalette");
+
 const config = {
     darkMode: ["class"],
     content: [
@@ -18,12 +25,15 @@ const config = {
             },
         },
         extend: {
+            boxShadow: {
+                input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
+            },
             fontFamily: {
                 poppins: ["Poppins", "sans-serif"],
             },
             colors: {
-                primarycolor : "#131313",
-                secondarycolor : "#FFC94A",
+                primarycolor: "#131313",
+                secondarycolor: "#FFC94A",
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",
                 ring: "hsl(var(--ring))",
@@ -31,7 +41,7 @@ const config = {
                 foreground: "#2c2c34",
                 primary: {
                     // DEFAULT: "hsl(var(--primary))",
-                    DEFAULT: "#b6433e",
+                    DEFAULT: "#FFC94A",
                     foreground: "hsl(var(--primary-foreground))",
                 },
                 secondary: {
@@ -80,7 +90,18 @@ const config = {
             },
         },
     },
-    plugins: [require("tailwindcss-animate")],
+    plugins: [require("tailwindcss-animate"), addVariablesForColors],
 } satisfies Config;
 
 export default config;
+
+function addVariablesForColors({ addBase, theme }: any) {
+    let allColors = flattenColorPalette(theme("colors"));
+    let newVars = Object.fromEntries(
+        Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+    );
+
+    addBase({
+        ":root": newVars,
+    });
+}

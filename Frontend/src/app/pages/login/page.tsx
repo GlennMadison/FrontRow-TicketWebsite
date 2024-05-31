@@ -5,8 +5,7 @@ import { redirect } from "next/navigation"
 const LoginPage = async () => {  
   const session = await getSession()
   return (
-    <div className="m-10">
-      <h1>Welcome to the LoginPage</h1>
+    <div className="p-16">
       <LoginForm/>
     </div>
   )

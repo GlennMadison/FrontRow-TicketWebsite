@@ -36,7 +36,6 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
-    // Check if event is undefined or has missing properties
     if (!event) {
         console.error("Event is undefined or has missing properties!");
         return null;
@@ -52,27 +51,26 @@ export function EventCard({ event }: EventCardProps) {
     });
 
     return (
-        <Card className="w-[350px] flex flex-col bg-secondarycolor shadow-lg shadow-secondarycolor border-none">
+        <Card className="w-[350px] flex flex-col border-4 bg-gradient-to-tr from-secondarycolor to-orange-500 border-none  shadow-lg shadow-secondarycolor ">
             <CardHeader className="flex flex-col ">
                 <img
                     className="rounded-lg  "
                     src={image_url}
                     alt={title}
                 />
-                <CardTitle className="text-primaryblack pt-2 text text-lg font-bold w-full truncate">
+                <CardTitle className="text-white pt-2 text text-lg font-bold w-full truncate ">
                     {title}
                 </CardTitle>
-                <CardDescription className="text-md text-primaryblack">
+                <CardDescription className="text-md ">
                     <div className="truncate">{location}</div>
                     <div className="flex justify-between items-center pt-5">
-                        <div className="font-semibold">a</div>
+                        <div className="font-semibold">PricePlaceholder</div>
                         <div>{formattedDate}</div>
                     </div>
                 </CardDescription>
             </CardHeader>
             <CardFooter className="flex justify-end">
-                {/* <Button className="w-24 bg-primaryred">Daftar</Button> */}
-                <Button variant="outline" className="w-24 ">
+                <Button variant="outline" className="w-24 bg-white">
                     Detail
                 </Button>
             </CardFooter>

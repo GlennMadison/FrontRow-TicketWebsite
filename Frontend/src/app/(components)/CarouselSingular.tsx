@@ -24,9 +24,9 @@ export function CarouselSingular() {
                 {Array.from({ length: 5 }).map((_, index) => (
                     <CarouselItem key={index}>
                         <div>
-                            <div className="flex items-center justify-center ">
+                            <div className="flex items-center justify-center px-4 ">
                                 <img
-                                    className="rounded-lg"
+                                    className="rounded-lg shadow-lg shadow-secondarycolor"
                                     src="https://loket-production-sg.s3.ap-southeast-1.amazonaws.com/images/ss/1715920542_Om8rLV.png"
                                     alt=""
                                 />
