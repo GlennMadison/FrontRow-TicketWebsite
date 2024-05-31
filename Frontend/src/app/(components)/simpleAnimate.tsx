@@ -1,0 +1,44 @@
+// AnimatedDiv.tsx
+import React, { ReactNode } from 'react';
+import { motion } from 'framer-motion';
+
+interface AnimatedDivProps {
+    children: ReactNode;
+    className?: string;
+    direction?: 'top' | 'bottom' | 'left' | 'right';
+    delay?: number;
+    duration?: number;
+}
+
+const AnimatedDiv: React.FC<AnimatedDivProps> = ({ children, className, direction = 'top', delay = 0.1, duration = 0.5 }) => {
+    const variants = {
+        top: { opacity: 0, y: -40 },
+        bottom: { opacity: 0, y: 40 },
+        left: { opacity: 0, x: -40 },
+        right: { opacity: 0, x: 40 }
+    };
+
+    const animateDirection = {
+        top: { opacity: 1, y: 0 },
+        bottom: { opacity: 1, y: 0 },
+        left: { opacity: 1, x: 0 },
+        right: { opacity: 1, x: 0 }
+    };
+
+    return (
+        <motion.div
+            initial={variants[direction]}
+            animate={animateDirection[direction]}
+            transition={{
+                delay: delay,
+                duration: duration,
+                ease: "easeInOut",
+            }}
+            className={`${className}`}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
+export default AnimatedDiv;

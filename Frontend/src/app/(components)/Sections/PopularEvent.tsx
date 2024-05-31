@@ -62,7 +62,7 @@ export function PopularEvent() {
     }
     return (
         <div className="h-auto flex justify-center items-center">
-            <div className="flex-col justify-center  p-4 overflow-hidden w-[80vw] rounded-2xl">
+            <div className="flex-col justify-center p-4 overflow-hidden w-[80vw] rounded-2xl">
                 <div className="px-4 py-3">
                     <Combobox />
                 </div>
