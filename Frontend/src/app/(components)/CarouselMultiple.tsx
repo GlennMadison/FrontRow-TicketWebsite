@@ -1,6 +1,4 @@
 import * as React from "react";
-import { EventCard } from "./EventCard";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,

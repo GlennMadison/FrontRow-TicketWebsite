@@ -82,34 +82,34 @@ export default function Discover() {
 
     useEffect(() => {
         const fetchEvents = async () => {
-          const session = await getSession();
-          try {
-            const token = session.password;
-            console.log("Token:", token);
-            const response = await axios.get<Event | Event[]>(
-              "http://localhost:5000/events",
-              {
-                headers: {
-                  token: token, // Include the token in the Authorization header
-                },
-              }
-            );
-            console.log("Response:", response);
-    
-            const eventData = response.data.data;
-            console.log("Event data:", eventData);
-            setEvents(eventData);
-          } catch (error) {
-            console.error("There was an error fetching the events!", error);
-            setError("There was an error fetching the events");
-          } finally {
-            setLoading(false);
-          }
+            const session = await getSession();
+            try {
+                const token = session.password;
+                console.log("Token:", token);
+                const response = await axios.get<Event | Event[]>(
+                    "http://localhost:5000/events",
+                    {
+                        headers: {
+                            token: token,
+                        },
+                    }
+                );
+                console.log("Response:", response);
+
+                const eventData = response.data.data;
+                console.log("Event data:", eventData);
+                setEvents(eventData);
+            } catch (error) {
+                console.error("There was an error fetching the events!", error);
+                setError("There was an error fetching the events");
+            } finally {
+                setLoading(false);
+            }
         };
-    
+
         fetchEvents();
-      }, []);
-    
+    }, []);
+
     return (
         <div className="h-screen flex justify-center p-10">
             <div className="flex">
@@ -309,24 +309,23 @@ export default function Discover() {
                         </AnimatedDiv>
                     </Accordion>
                 </div>
-                    
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
-                        {events.slice(0, 8).map((event, index) => (
-                            <div
-                                key={event.ID}
-                                className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+                    {events.slice(0, 8).map((event, index) => (
+                        <div
+                            key={event.ID}
+                            className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"
+                        >
+                            <AnimatedDiv
+                                direction="bottom"
+                                delay={0.2 * index + 1}
+                                duration={1}
                             >
-                                <AnimatedDiv
-                                    direction="bottom"
-                                    delay={(0.1 * index) + 1}
-                                    duration={0.3}
-                                >
-                                    <EventCard event={event} />
-                                </AnimatedDiv>
-                            </div>
-                        ))}
-                    </div>
-                
+                                <EventCard event={event} />
+                            </AnimatedDiv>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

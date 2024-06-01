@@ -1,5 +1,4 @@
-// AnimatedDiv.tsx
-import React, { ReactNode } from 'react';
+import React, { ReactNode, memo } from 'react';
 import { motion } from 'framer-motion';
 
 interface AnimatedDivProps {
@@ -10,7 +9,13 @@ interface AnimatedDivProps {
     duration?: number;
 }
 
-const AnimatedDiv: React.FC<AnimatedDivProps> = ({ children, className, direction = 'top', delay = 0.1, duration = 0.5 }) => {
+const AnimatedDiv: React.FC<AnimatedDivProps> = memo(({ 
+    children, 
+    className = '', 
+    direction = 'top', 
+    delay = 0.1, 
+    duration = 0.5 
+}) => {
     const variants = {
         top: { opacity: 0, y: -40 },
         bottom: { opacity: 0, y: 40 },
@@ -30,15 +35,15 @@ const AnimatedDiv: React.FC<AnimatedDivProps> = ({ children, className, directio
             initial={variants[direction]}
             animate={animateDirection[direction]}
             transition={{
-                delay: delay,
-                duration: duration,
-                ease: "easeInOut",
+                delay,
+                duration,
+                ease: 'easeInOut',
             }}
-            className={`${className}`}
+            className={className}
         >
             {children}
         </motion.div>
     );
-};
+});
 
 export default AnimatedDiv;

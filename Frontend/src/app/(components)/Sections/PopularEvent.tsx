@@ -3,6 +3,7 @@ import { EventCard } from "../EventCard";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { getSession } from "@/action";
 
 interface Ticket {
     ID: string;
@@ -33,20 +34,35 @@ export function PopularEvent() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axios
-            .get<Event | Event[]>("http://localhost:5000/events")
-            .then((response) => {
+        const fetchEvents = async () => {
+            const session = await getSession();
+            try {
+                // Retrieve the token from the session
+
+                const token = session.password;
+                console.log("Token:", token);
+                // Make a request to retrieve the events data with Axios
+                const response = await axios.get<Event | Event[]>(
+                    "http://localhost:5000/events",
+                    {
+                        headers: {
+                            token: token, // Include the token in the Authorization header
+                        },
+                    }
+                );
+
                 const eventData = response.data.data;
                 console.log("Event data:", eventData);
                 setEvents(eventData);
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error("There was an error fetching the events!", error);
                 setError("There was an error fetching the events");
-            })
-            .finally(() => {
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchEvents();
     }, []);
 
     useEffect(() => {

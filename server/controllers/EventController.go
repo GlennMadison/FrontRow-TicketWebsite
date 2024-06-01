@@ -108,3 +108,22 @@ func DeleteEvent(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": "Event deleted"})
 }
 
+func GetEventById(c *gin.Context) {
+	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+	var event models.Event
+
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = eventCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&event)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	defer cancel()
+	c.JSON(http.StatusOK, gin.H{"data": event})
+}
