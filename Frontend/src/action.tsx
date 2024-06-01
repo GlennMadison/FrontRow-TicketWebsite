@@ -42,8 +42,10 @@ export const login = async (
     const session = await getSession();
     session.userId = userData.ID;
     session.email = userData.email;
-    session.password = userData.password;
+    session.password = userData.token;
+    // localStorage.setItem("token", userData.token);
     session.isLoggedIn = true;
+
     await session.save();
 
     redirect("/");

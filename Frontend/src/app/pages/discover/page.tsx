@@ -12,6 +12,7 @@ import { useState, useEffect } from "react";
 import { Cross1Icon } from "@radix-ui/react-icons";
 import { EventCard } from "@/app/(components)/EventCard";
 import axios from "axios";
+import { getSession } from "@/action";
 
 type Option = {
     value: string;
@@ -80,21 +81,34 @@ export default function Discover() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        axios
-            .get<Event | Event[]>("http://localhost:5000/events")
-            .then((response) => {
-                const eventData = response.data.data;
-                console.log("Event data:", eventData);
-                setEvents(eventData);
-            })
-            .catch((error) => {
-                console.error("There was an error fetching the events!", error);
-                setError("There was an error fetching the events");
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, []);
+        const fetchEvents = async () => {
+          const session = await getSession();
+          try {
+            const token = session.password;
+            console.log("Token:", token);
+            const response = await axios.get<Event | Event[]>(
+              "http://localhost:5000/events",
+              {
+                headers: {
+                  token: token, // Include the token in the Authorization header
+                },
+              }
+            );
+            console.log("Response:", response);
+    
+            const eventData = response.data.data;
+            console.log("Event data:", eventData);
+            setEvents(eventData);
+          } catch (error) {
+            console.error("There was an error fetching the events!", error);
+            setError("There was an error fetching the events");
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchEvents();
+      }, []);
     
     return (
         <div className="h-screen flex justify-center p-10">
