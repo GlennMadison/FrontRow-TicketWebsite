@@ -37,22 +37,21 @@ export function PopularEvent() {
         const fetchEvents = async () => {
             const session = await getSession();
             try {
-                // Retrieve the token from the session
+
 
                 const token = session.password;
-                console.log("Token:", token);
-                // Make a request to retrieve the events data with Axios
+
                 const response = await axios.get<Event | Event[]>(
                     "http://localhost:5000/events",
                     {
                         headers: {
-                            token: token, // Include the token in the Authorization header
+                            token: token, 
                         },
                     }
                 );
 
                 const eventData = response.data.data;
-                console.log("Event data:", eventData);
+                
                 setEvents(eventData);
             } catch (error) {
                 console.error("There was an error fetching the events!", error);
@@ -65,9 +64,7 @@ export function PopularEvent() {
         fetchEvents();
     }, []);
 
-    useEffect(() => {
-        console.log("Events:", events);
-    }, [events]);
+    
 
     if (loading) {
         return <div>Loading...</div>;

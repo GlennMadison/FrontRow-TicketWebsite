@@ -43,6 +43,8 @@ export const login = async (
     session.userId = userData.ID;
     session.email = userData.email;
     session.password = userData.token;
+    session.username = userData.username;
+    session.avatar = userData.avatar;
     // localStorage.setItem("token", userData.token);
     session.isLoggedIn = true;
 

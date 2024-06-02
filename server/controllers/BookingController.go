@@ -76,6 +76,26 @@ func GetTicketByID(id primitive.ObjectID) models.Ticket {
 	return ticket
 }
 
+func GetTicketID(c *gin.Context) {
+	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+	var ticket models.Ticket
+
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = ticketCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&ticket)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	defer cancel()
+	c.JSON(http.StatusOK, gin.H{"data": ticket})
+}
+
 func GetOrders(c *gin.Context) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 	var orders []models.Booking

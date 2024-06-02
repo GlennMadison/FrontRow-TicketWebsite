@@ -1,32 +1,78 @@
-"use client"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "react-feather";
 import { Separator } from "@/components/ui/separator";
-import { getSession } from "@/action"
+import { getSession } from "@/action";
 import { useEffect, useState } from "react";
+import { IconArmchair } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
+import {logout} from "@/action";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+
 
 const Navbar: React.FC = () => {
-    const [email, setEmail] = useState<string | undefined>();
+    const router = useRouter();
+    const [username, setUsername] = useState<string | undefined>();
+    const [profileUrl, setProfileUrl] = useState<string | undefined>();
+
     useEffect(() => {
-        // Fetch session data when the component mounts
         const fetchSessionData = async () => {
             try {
                 const session = await getSession();
-                setEmail(session.email); // Set the username from the session data
+                setUsername(session.username);
+                setProfileUrl(session.avatar);
             } catch (error) {
-                console.error('Error fetching session data:', error);
+                console.error("Error fetching session data:", error);
             }
         };
 
         fetchSessionData();
     }, []);
+   
+
+    const handleLogin = () => {
+        router.push(`/pages/login`);
+    };
+    
+    const handleProfile = () => {
+        router.push(`/pages/profile`);
+    };
+    
+    const handleHome = () => {
+        router.push(`/`);
+    }
+
+    const handleLogout = async () => {
+        try {
+            await logout(); 
+            router.push(`/`);
+        } catch (error) {
+            console.error("Error logging out:", error);
+        }
+    }
+
+
 
     return (
         <div className="flex-col justify-center items-center">
-            <nav className="flex items-center justify-between p-3 py-5 ">
-                <h1 className="text-white">FrontRow</h1>
+            <nav className="flex items-center justify-between px-10 py-5  ">
+                <div className="flex items-center cursor-default " onClick={handleHome}>
+                    <IconArmchair size={32} className="text-secondarycolor" />
+                    <h1 className="bg-gradient-to-r from-secondarycolor  to-orange-500 inline-block text-transparent bg-clip-text text-3xl font-semibold">
+                        FrontRow
+                    </h1>
+                </div>
 
                 <div className="flex w-full max-w-sm items-center space-x-2">
                     <Input
@@ -39,26 +85,42 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <div className="flex items-center content-between">
-
-                    
-                    <Button
-                        className="text-white border-white border-2"
-                        variant={"ghost"}
-                    >
-                        Masuk
-                    </Button>
-                    
-                    {/* <Avatar>
-                    <AvatarImage
-                        src="https://github.com/shadcn.png"
-                        alt="@shadcn"
-                    />
-                    <AvatarFallback>CN</AvatarFallback>
-                </Avatar> */}
-                <h1 className="text-white">{email}</h1>
+                    {username ? (
+                        <div>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className="flex ">
+                                    <button className="px-6 py-2 text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400 border-none">
+                                        {username}
+                                    </button>
+                                    <Avatar>
+                                        <AvatarImage
+                                            src={profileUrl}
+                                            alt="@shadcn"
+                                        />
+                                        <AvatarFallback>CN</AvatarFallback>
+                                    </Avatar>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="bg-primarycolor text-white border-secondarycolor border-2">
+                                    <DropdownMenuLabel>
+                                        My Account
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator className="bg-secondarycolor" />
+                                    <DropdownMenuItem onClick={handleProfile}>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    ) : (
+                        <Button
+                            className="text-secondarycolor border-secondarycolor border-2"
+                            variant={"ghost"} onClick={handleLogin}
+                        >
+                            Login
+                        </Button>
+                    )}
                 </div>
             </nav>
-            
+            <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-primarycolor to-transparent  h-[1px] w-full" />
         </div>
     );
 };

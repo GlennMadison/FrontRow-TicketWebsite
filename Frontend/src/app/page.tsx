@@ -36,7 +36,7 @@ export default function Home() {
           const session = await getSession();
           try {
             const token = session.password;
-            console.log("Token:", token);
+            
             const response = await axios.get<Event | Event[]>(
               "http://localhost:5000/events",
               {
@@ -45,10 +45,10 @@ export default function Home() {
                 },
               }
             );
-            console.log("Response:", response);
+           
     
             const eventData = response.data.data;
-            console.log("Event data:", eventData);
+            
             setEvents(eventData);
           } catch (error) {
             console.error("There was an error fetching the events!", error);

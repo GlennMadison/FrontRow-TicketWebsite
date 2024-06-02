@@ -41,9 +41,12 @@ interface Event {
 
 export default function event() {
     const searchParams = useSearchParams();
-
+    const router = useRouter();
     const eventId = searchParams.get("Id");
-    // console.log(eventId);
+    if(!eventId) {
+        router.push("/");
+    }
+        
 
     const [events, setEvents] = useState<Event>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -59,13 +62,13 @@ export default function event() {
                     "http://localhost:5000/event/" + eventId,
                     {
                         headers: {
-                            token: token, // Include the token in the Authorization header
+                            token: token, 
                         },
                     }
                 );
 
                 const eventData = response.data.data;
-                console.log("Event data:", eventData);
+                
                 setEvents(eventData);
             } catch (error) {
                 console.error("There was an error fetching the events!", error);
@@ -78,6 +81,7 @@ export default function event() {
         fetchEvents();
     }, []);
 
+
     function formatDate(inputDate: string | undefined): string {
         if (!inputDate) return "";
 
@@ -89,6 +93,15 @@ export default function event() {
 
         return formattedDate;
     }
+
+
+
+    
+    const handlePurchase = (message: string) => {
+        console.log("Ticket ID: ", message);
+        router.push(`/pages/payment?Id=${message}&eventId=${eventId}`);
+    }
+
 
     return (
         <div className="h-auto bg-primarycolor flex justify-center ">
@@ -165,7 +178,7 @@ export default function event() {
                         </TabsContent>
                         <TabsContent value="ticket">
                             <ScrollArea className="max-w-3xl h-[40vw] rounded-md py-4 text-white ">
-                                {events?.tickets.map((event, index) => (
+                                {events?.tickets.map((ticket, index) => (
                                     <div
                                         key={index}
                                         className="p-2 m-1 hover:m-0 transition-all"
@@ -180,7 +193,7 @@ export default function event() {
                                                     <div>
                                                         <div className="text-xl">
                                                             <h1>
-                                                                {event.category}
+                                                                {ticket.category}
                                                             </h1>
                                                         </div>
                                                         <div className="text-md font-light">
@@ -196,6 +209,7 @@ export default function event() {
                                                         <Button
                                                             variant="outline"
                                                             size="icon"
+                                                            onClick = {() => handlePurchase(ticket.ID)}
                                                         >
                                                             <ChevronRightIcon className="h-4 w-4" />
                                                         </Button>
@@ -205,7 +219,7 @@ export default function event() {
                                                 <div className="flex items-center justify-between">
                                                     <div className="text-lg font-bold">
                                                         <h1>
-                                                            Rp {event.price}
+                                                            Rp {ticket.price}
                                                         </h1>
                                                     </div>
                                                     <div className="text-secondarycolor">
