@@ -39,6 +39,7 @@ export const login = async (
     }
 
     // Update the session with user data retrieved from the backend
+    //test here
     const session = await getSession();
     session.userId = userData.ID;
     session.email = userData.email;
