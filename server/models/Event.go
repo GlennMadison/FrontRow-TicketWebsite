@@ -18,4 +18,5 @@ type Event struct{
 	Tickets 	[]Ticket			`json:"tickets"`
 	PublisherName *string			`json:"publisher_name"`
 	Label 		*string				`json:"label"`
+	Region 		*string				`json:"region"`
 }
