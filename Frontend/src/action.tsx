@@ -5,61 +5,56 @@ import { getIronSession } from "iron-session";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import jwt from "jsonwebtoken";
 import axios from "axios";
 
 export const getSession = async () => {
-  const session = await getIronSession<SessionData>(cookies(), sessionOptions);
-  if (!session.isLoggedIn) {
-    session.isLoggedIn = defaultSession.isLoggedIn;
-  }
-  if (session.isLoggedIn && session.expdate) {
-    const expirationDate = new Date(session.expdate);
-    if (expirationDate < new Date()) {
-      // Session has expired, destroy it
-      await session.destroy();
-      redirect("/pages/login");
+    const session = await getIronSession<SessionData>(
+        cookies(),
+        sessionOptions
+    );
+
+    if (!session.isLoggedIn) {
+        session.isLoggedIn = defaultSession.isLoggedIn;
     }
-  }
-  return session;
+    return session;
 };
 
 export const login = async (
-  prevState: { error: undefined | string },
-  formData: FormData
+    prevState: { error: undefined | string },
+    formData: FormData
 ) => {
-  const formEmail = formData.get("email") as string;
-  const formPassword = formData.get("password") as string;
+    const formEmail = formData.get("email") as string;
+    const formPassword = formData.get("password") as string;
 
-  const response = await axios.post("http://localhost:5000/account/login", {
-    email: formEmail,
-    password: formPassword,
-  });
+    // Make an HTTP request to your backend endpoint to check user credentials
+    const response = await axios.post("http://localhost:5000/account/login", {
+        email: formEmail,
+        password: formPassword,
+    });
 
-  const userData = response.data.LoginInfo;
-  if (!userData || userData.email !== formEmail) {
-    return { error: "Invalid email or password" };
-  }
-  const decoded = jwt.decode(userData.token) as { exp: number };
-  const expdate = new Date(decoded.exp * 1000);
+    // Extract user data from the response
+    const userData = response.data.LoginInfo;
+    if (!userData || userData.email !== formEmail) {
+        return { error: "Invalid email or password" };
+    }
 
-  const session = await getSession();
-  session.userId = userData.ID;
-  session.email = userData.email;
-  session.password = userData.token;
-  session.username = userData.username;
-  session.avatar = userData.avatar;
-  session.isLoggedIn = true;
-  session.expdate = expdate;
+    // Update the session with user data retrieved from the backend
+    const session = await getSession();
+    session.userId = userData.ID;
+    session.email = userData.email;
+    session.password = userData.token;
+    session.username = userData.username;
+    session.avatar = userData.avatar;
+    // localStorage.setItem("token", userData.token);
+    session.isLoggedIn = true;
 
-  await session.save();
+    await session.save();
 
-  redirect("/");
+    redirect("/");
 };
 
 export const logout = async () => {
-  const session = await getSession();
-  session.destroy();
-
-  redirect("/");
+    const session = await getSession();
+    session.destroy();
+    redirect("/");
 };

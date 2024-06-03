@@ -66,11 +66,6 @@ const Navbar: React.FC = () => {
     const handleSearch = () => {
         router.push(`/pages/results?query=${query}`);
     }
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            handleSearch();
-        }
-    };
 
 
     return (
@@ -89,7 +84,6 @@ const Navbar: React.FC = () => {
                         placeholder="Cari event seru..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        onKeyPress={handleKeyPress}
                     />
                     <Button type="submit" variant="outline" size="icon" onClick={handleSearch}>
                         <Search className=" size-4"></Search>

@@ -9,5 +9,5 @@ func BookingRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.POST("/order", controller.CreateOrder)
 	incomingRoutes.GET("/orders", controller.GetOrders)
 	incomingRoutes.DELETE("/order/:id", controller.DeleteOrder)
-	incomingRoutes.GET("/order/:id", controller.GetTicketID)
+	incomingRoutes.GET("/ticket/:id", controller.GetTicketID)
 }

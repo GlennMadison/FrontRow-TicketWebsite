@@ -7,7 +7,6 @@ export interface SessionData {
     avatar?: string;
     isLoggedIn: boolean;
     username?: string;
-    expdate?: Date;
 }
 
 export const defaultSession: SessionData = {

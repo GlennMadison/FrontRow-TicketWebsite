@@ -12,5 +12,4 @@ func UserRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.POST("account/login", controller.Login)
 	incomingRoutes.PUT("/account/update/:id", controller.UpdateAccount)
 	incomingRoutes.DELETE("/account/delete/:id", controller.DeleteAccount)
-
 }
