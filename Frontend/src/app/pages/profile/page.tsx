@@ -19,7 +19,9 @@ const ProfilePage = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        
         const fetchEvents = async () => {
+            
             const session = await getSession();
             try {
                 // Retrieve the token from the session
@@ -51,7 +53,6 @@ const ProfilePage = () => {
 
         fetchEvents();
     }, []);
-
     return (
         <div>
             {/* <h2 className='text-white'>Profile Page</h2>

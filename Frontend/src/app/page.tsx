@@ -13,69 +13,66 @@ interface Ticket {
 }
 
 interface Event {
-    ID: string;
-    title: string;
-    start_date: string;
-    end_date: string;
-    image_url: string;
-    description: string;
-    location: string;
-    available_ticket: number;
-    tickets: Ticket[];
-    publishername: string;
+  ID: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  image_url: string;
+  description: string;
+  location: string;
+  available_ticket: number;
+  tickets: Ticket[];
+  publishername: string;
 }
 
 export default function Home() {
-    const [events, setEvents] = useState<Event[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const session = await getSession();
+      try {
+        const token = session.password;
 
-    useEffect(() => {
-        const fetchEvents = async () => {
-          const session = await getSession();
-          try {
-            const token = session.password;
-            
-            const response = await axios.get<Event | Event[]>(
-              "http://localhost:5000/events",
-              {
-                headers: {
-                  token: token, // Include the token in the Authorization header
-                },
-              }
-            );
-           
-    
-            const eventData = response.data.data;
-            
-            setEvents(eventData);
-          } catch (error) {
-            console.error("There was an error fetching the events!", error);
-            setError("There was an error fetching the events");
-          } finally {
-            setLoading(false);
+        const response = await axios.get<Event | Event[]>(
+          "http://localhost:5000/events",
+          {
+            headers: {
+              token: token,
+            },
           }
-        };
-    
-        fetchEvents();
-      }, []);
+        );
 
+        const eventData = response.data.data;
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+        setEvents(eventData);
+      } catch (error) {
+        console.error("There was an error fetching the events!", error);
+        setError("There was an error fetching the events");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    if (error) {
-        return <div>{error}</div>;
-    }
+    fetchEvents();
+  }, []);
 
-    return (
-        <div className="font-poppins bg-primarycolor ">
-            <Hero />
-            <PopularEvent />
-            <EventCategory />
-            <div className="h-screen"></div>
-        </div>
-    );
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  return (
+    <div className="font-poppins bg-primarycolor ">
+      <Hero />
+      <PopularEvent />
+      <EventCategory />
+      <div className="h-screen"></div>
+    </div>
+  );
 }
