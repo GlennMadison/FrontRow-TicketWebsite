@@ -10,4 +10,5 @@ func EventRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.GET("/events", controller.GetEvents)
 	incomingRoutes.DELETE("/event/:id", controller.DeleteEvent)
 	incomingRoutes.GET("/event/:id", controller.GetEventById)
+	incomingRoutes.GET("/search/:query", controller.SearchEvent)
 }

@@ -30,16 +30,16 @@ export const useClickHandler = (config: Config) => {
   const [data, setData] = useState<Data>({ image: '', thumb: '', captKey: '' });
 
   const clickEvent = useCallback(() => {
-    setState({ ...state, popoverVisible: true });
-  }, [state]);
+    setState(prevState => ({ ...prevState, popoverVisible: true }));
+  }, []);
 
   const visibleChangeEvent = useCallback((visible: boolean) => {
-    setState({ ...state, popoverVisible: visible });
-  }, [state]);
+    setState(prevState => ({ ...prevState, popoverVisible: visible }));
+  }, []);
 
   const closeEvent = useCallback(() => {
-    setState({ ...state, popoverVisible: false });
-  }, [state]);
+    setState(prevState => ({ ...prevState, popoverVisible: false }));
+  }, []);
 
   const requestCaptchaData = useCallback(() => {
     Axios({
@@ -62,7 +62,7 @@ export const useClickHandler = (config: Config) => {
     }).catch((e) => {
       console.warn(e);
     });
-  }, [setData, config.getApi]);
+  }, [config.getApi]);
 
   const refreshEvent = useCallback(() => {
     requestCaptchaData();
@@ -84,10 +84,10 @@ export const useClickHandler = (config: Config) => {
       const { data = {} } = response;
       if ((data['code'] || 0) === 0) {
         message.success(`check captcha data success`);
-        setState({ ...state, popoverVisible: false, type: "success" });
+        setState(prevState => ({ ...prevState, popoverVisible: false, type: "success" }));
       } else {
         message.warning(`failed check captcha data`);
-        setState({ ...state, type: "error" });
+        setState(prevState => ({ ...prevState, type: "error" }));
       }
 
       setTimeout(() => {
@@ -97,7 +97,7 @@ export const useClickHandler = (config: Config) => {
     }).catch((e) => {
       console.warn(e);
     });
-  }, [data, state, setState, config.checkApi, requestCaptchaData]);
+  }, [data.captKey, config.checkApi, requestCaptchaData]);
 
   useEffect(() => {
     if (state.popoverVisible) {

@@ -89,6 +89,36 @@ func GetEvents(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": events})
 }
 
+func SearchEvent(c *gin.Context) {
+	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel() 
+
+	var events []models.Event
+	search := c.Param("query")
+
+	cursor, err := eventCollection.Find(ctx, bson.M{"title": bson.M{"$regex": search, "$options": "i"}})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var event models.Event
+		if err := cursor.Decode(&event); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		events = append(events, event)
+	}
+
+	if err := cursor.Err(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": events})
+}
+
 func DeleteEvent(c *gin.Context) {
 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 

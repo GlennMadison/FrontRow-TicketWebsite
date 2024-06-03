@@ -25,6 +25,7 @@ const Navbar: React.FC = () => {
     const router = useRouter();
     const [username, setUsername] = useState<string | undefined>();
     const [profileUrl, setProfileUrl] = useState<string | undefined>();
+    const [query, setQuery] = useState<string>("");
 
     useEffect(() => {
         const fetchSessionData = async () => {
@@ -62,12 +63,15 @@ const Navbar: React.FC = () => {
         }
     }
 
+    const handleSearch = () => {
+        router.push(`/pages/results?query=${query}`);
+    }
 
 
     return (
         <div className="flex-col justify-center items-center">
             <nav className="flex items-center justify-between px-10 py-5  ">
-                <div className="flex items-center cursor-default " onClick={handleHome}>
+                <div className="flex items-center cursor-pointer" onClick={handleHome}>
                     <IconArmchair size={32} className="text-secondarycolor" />
                     <h1 className="bg-gradient-to-r from-secondarycolor  to-orange-500 inline-block text-transparent bg-clip-text text-3xl font-semibold">
                         FrontRow
@@ -76,10 +80,12 @@ const Navbar: React.FC = () => {
 
                 <div className="flex w-full max-w-sm items-center space-x-2">
                     <Input
-                        className="max-w-xl"
+                        className="max-w-xl text-white"
                         placeholder="Cari event seru..."
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
                     />
-                    <Button type="submit" variant="outline" size="icon">
+                    <Button type="submit" variant="outline" size="icon" onClick={handleSearch}>
                         <Search className=" size-4"></Search>
                     </Button>
                 </div>

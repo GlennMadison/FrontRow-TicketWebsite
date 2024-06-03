@@ -44,7 +44,7 @@ func init() {
 
 	// set resources
 	textCapt.SetResources(
-		click.WithChars(chars.GetChineseChars()),
+		// click.WithChars(chars.GetChineseChars()),
 		//click.WithChars([]string{
 		//	"1A",
 		//	"5E",
@@ -55,7 +55,7 @@ func init() {
 		//	"CB",
 		//	"9M",
 		//}),
-		//click.WithChars(chars.GetAlphaChars()),
+		click.WithChars(chars.GetAlphaChars()),
 		click.WithFonts([]*truetype.Font{fonts}),
 		click.WithBackgrounds(imgs),
 		//click.WithThumbBackgrounds(thumbImages),

@@ -1,14 +1,24 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import GoCaptcha from 'go-captcha-react';
 import { Popover } from 'antd';
 import { useClickHandler } from "./Hooks/useClickText";
 
 function ClickTextCapt() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const handler = useClickHandler({
     getApi: "http://localhost:5000/captcha",
     checkApi: "http://localhost:5000/verif"
   });
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <Popover
@@ -33,7 +43,7 @@ function ClickTextCapt() {
       onOpenChange={handler.visibleChangeEvent}
       forceRender={true}
       trigger="click">
-      <GoCaptcha.Button {...handler.state} clickEvent={handler.clickEvent} title={"Verification"}/>
+      <GoCaptcha.Button {...handler.state} clickEvent={handler.clickEvent} title={"Verification"} />
     </Popover>
   );
 }
