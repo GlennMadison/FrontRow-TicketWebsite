@@ -3,6 +3,7 @@ import Lodash from "lodash";
 import Axios from 'axios';
 import { message } from 'antd';
 import Qs from 'qs';
+import { useRouter } from "next/navigation";
 
 interface Config {
   getApi: string;
@@ -28,6 +29,7 @@ interface Dot {
 export const useClickHandler = (config: Config) => {
   const [state, setState] = useState<State>({ popoverVisible: false });
   const [data, setData] = useState<Data>({ image: '', thumb: '', captKey: '' });
+  const Router = useRouter();
 
   const clickEvent = useCallback(() => {
     setState(prevState => ({ ...prevState, popoverVisible: true }));
@@ -85,8 +87,9 @@ export const useClickHandler = (config: Config) => {
       if ((data['code'] || 0) === 0) {
         message.success(`check captcha data success`);
         setState(prevState => ({ ...prevState, popoverVisible: false, type: "success" }));
+        Router.push(`/pages/profile`);
       } else {
-        message.warning(`failed check captcha data`);
+        message.warning(`failed check captcha data, please try again`);
         setState(prevState => ({ ...prevState, type: "error" }));
       }
 

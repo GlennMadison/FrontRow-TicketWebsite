@@ -13,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -178,34 +179,87 @@ func DeleteAccount(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": account})
 }
 
+// func UpdateAccount(c *gin.Context) {
+// 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+// 	var account models.User
+
+// 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	if err := c.BindJSON(&account); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	if err := validate.Struct(account); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	account.ID = id
+
+// 	result, err := accountCollection.ReplaceOne(ctx, bson.M{"_id": id}, account)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	defer cancel()
+// 	c.JSON(http.StatusOK, gin.H{"data": result})
+// }
+
 func UpdateAccount(c *gin.Context) {
-	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-	var account models.User
+    var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+    var updateAccount models.User
 
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+    id, err := primitive.ObjectIDFromHex(c.Param("id"))
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    if err := c.BindJSON(&updateAccount); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    updateFields := bson.M{}
+    if *updateAccount.Username != "" {
+        updateFields["username"] = updateAccount.Username
+    }
+    if updateAccount.Email != nil {
+        updateFields["email"] = updateAccount.Email
+    }
+	if updateAccount.Password != nil {
+		password :=	hashPassword(*updateAccount.Password)
+		updateFields["password"] = password
+	}
+	if updateAccount.Phone != nil {
+		updateFields["phone"] = updateAccount.Phone
+	}
+	if updateAccount.Avatar != nil {
+		updateFields["avatar"] = updateAccount.Avatar
+	}
+	if updateAccount.Age != nil {
+		updateFields["age"] = updateAccount.Age
 	}
 
-	if err := c.BindJSON(&account); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    updateFields["updatedat"] = time.Now()
+    updateResult := accountCollection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": updateFields}, options.FindOneAndUpdate().SetReturnDocument(options.After))
+    if updateResult.Err() != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": updateResult.Err().Error()})
+        return
+    }
 
-	if err := validate.Struct(account); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
+    var updatedAccount models.User
+    if err := updateResult.Decode(&updatedAccount); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
 
-	account.ID = id
-
-	result, err := accountCollection.ReplaceOne(ctx, bson.M{"_id": id}, account)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	defer cancel()
-	c.JSON(http.StatusOK, gin.H{"data": result})
+    defer cancel()
+    c.JSON(http.StatusOK, gin.H{"data": updatedAccount})
 }

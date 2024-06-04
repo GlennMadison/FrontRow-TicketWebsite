@@ -6,7 +6,6 @@ import { useClickHandler } from "./Hooks/useClickText";
 
 function ClickTextCapt() {
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setMounted(true);
   }, []);
