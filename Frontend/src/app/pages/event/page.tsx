@@ -202,7 +202,7 @@ export default function event() {
                             <MapPin />
                             <div className="pl-2 ">{events?.location}</div>
                         </div>
-                        <div className="flex py-2 w-max">
+                        <div className="flex py-2">
                             <Calendar />
                             <div className="pl-2">
                                 {formatDate(events?.start_date)} -{" "}

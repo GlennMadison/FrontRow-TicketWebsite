@@ -6,12 +6,10 @@ import LogoutForm from "@/app/(components)/LogoutForm";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import Link from "next/link";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
-import { Card } from "antd";
 import { Button } from "@/components/ui/button";
-import { GearIcon } from "@radix-ui/react-icons";
 import AnimatedDiv from "@/app/(components)/simpleAnimate";
-import { map } from "lodash";
+import RecentPurchase from "../../(components)/Sections/recentPurchase";
+import EditProfile from "@/app/(components)/Sections/EditProfile";
 
 interface User {
   ID: string;
@@ -36,39 +34,15 @@ interface Event {
   publisher_name: string;
 }
 
-interface Ticket {
-  ID: string;
-  category: string;
-  price: number;
-}
 
-interface BookingTicket {
-  ticket_id: string;
-  quantity: number;
-}
 
-interface OrderHistory {
-  id: string;
-  event_id: string;
-  total_ticket: number;
-  booking_date: string;
-  tickets: BookingTicket[];
-  total_price: number;
-  event_title?: string;
-  ticket_details?: {
-    ticket_id: string;
-    category: string;
-    price: number;
-    quantity: number;
-  }[];
-}
+
 
 const ProfilePage = () => {
-  const [orderHistory, setOrderHistory] = useState<OrderHistory[]>();
+  
   const [user, setUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [events, setEvents] = useState<Event[]>();
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -89,7 +63,7 @@ const ProfilePage = () => {
         );
 
         const user = response.data.data;
-        // console.log(user);
+
 
         setUser(user);
       } catch (error) {
@@ -99,187 +73,21 @@ const ProfilePage = () => {
         setLoading(false);
       }
     };
-    fetchHistory();
     fetchEvents();
   }, []);
 
-  useEffect(() => {}, [user]);
 
-  const fetchHistory = async () => {
-    const session = await getSession();
-    try {
-      const token = session.password;
-      const decodeToken = jwt.decode(token);
-      const userId = decodeToken?.Uid;
+  
 
-      const response = await axios.get<{ data: OrderHistory[] }>(
-        `http://localhost:5000/orders/${userId}`,
-        {
-          headers: {
-            token: token,
-          },
-        }
-      );
-
-      const orders = response.data.data;
-
-      const enrichedOrders = await Promise.all(
-        orders.map(async (order) => {
-          const eventResponse = await axios.get<{ data: Event }>(
-            `http://localhost:5000/event/${order.event_id}`,
-            {
-              headers: {
-                token: token,
-              },
-            }
-          );
-
-          const event = eventResponse.data.data;
-
-          const ticketsDetails = await Promise.all(
-            order.tickets.map(async (bookingTicket) => {
-              const ticketResponse = await axios.get<{ data: Ticket }>(
-                `http://localhost:5000/ticket/${bookingTicket.ticket_id}`,
-                {
-                  headers: {
-                    token: token,
-                  },
-                }
-              );
-
-              const ticket = ticketResponse.data.data;
-
-              return {
-                ...ticket,
-                ticket_id: bookingTicket.ticket_id,
-                quantity: bookingTicket.quantity,
-              };
-            })
-          );
-
-          return {
-            ...order,
-            event_title: event.title,
-            ticket_details: ticketsDetails,
-          };
-        })
-      );
-
-      console.log("orders", enrichedOrders);
-      setOrderHistory(enrichedOrders);
-    } catch (error) {
-      setError("There was an error fetching the History");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  function formatDate(inputDate: string | undefined): string {
-    if (!inputDate) return "";
-
-    const formattedDate = new Date(inputDate).toLocaleDateString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-
-    return formattedDate;
-  }
+  
 
   return (
     <div className="h-auto items-start flex p-10">
       <div className="grid grid-cols-3 w-full gap-10">
-        <AnimatedDiv direction="top" duration={0.8}>
-          <CardContainer className="inter-var ">
-            <CardBody className="flex-col w-full items-start bg-gradient-to-br from-orange-500 to-secondarycolor relative group/card  dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1]  h-auto rounded-xl p-6 border  ">
-              <div className="flex-grow grid grid-cols-2 gap-4 text-white font-bold text-xl ">
-                <CardItem className="col-span-2 mx-auto" translateZ={50}>
-                  <div className="flex justify-center items-center">
-                    <img
-                      src={user?.avatar ?? ""}
-                      alt="avatar"
-                      width={250}
-                      className="rounded-full border-4  "
-                    />
-                  </div>
-                </CardItem>
-                <CardItem translateZ={20} className="p-2">
-                  <h1 className="">Username</h1>
-                </CardItem>
-                <CardItem
-                  translateZ={20}
-                  className="flex justify-end items-end border-2 rounded-xl p-2 w-auto hover:border-none hover:bg-white hover:text-secondarycolor transition-all"
-                >
-                  <h1 className="flex font-medium">{user?.username}</h1>
-                </CardItem>
-                <CardItem translateZ={20} className="p-2">
-                  <h1>Email</h1>
-                </CardItem>
-                <CardItem
-                  translateZ={20}
-                  className="flex justify-end items-end border-2 rounded-xl p-2 w-auto hover:border-none hover:bg-white hover:text-secondarycolor transition-all"
-                >
-                  <h1 className="font-medium">{user?.email}</h1>
-                </CardItem>
-                <CardItem translateZ={20} className="p-2">
-                  <h1>Phone</h1>
-                </CardItem>
-                <CardItem
-                  translateZ={20}
-                  className="flex justify-end items-end border-2 rounded-xl p-2 w-auto hover:border-none hover:bg-white hover:text-secondarycolor transition-all"
-                >
-                  <h1 className="font-medium">{user?.phone}</h1>
-                </CardItem>
-                <CardItem translateZ={20} className="p-2">
-                  <h1>Age</h1>
-                </CardItem>
-                <CardItem
-                  translateZ={20}
-                  className="flex justify-end items-end border-2 rounded-xl p-2 w-auto hover:border-none hover:bg-white hover:text-secondarycolor transition-all"
-                >
-                  <h1 className="font-medium ">{user?.age}</h1>
-                </CardItem>
-              </div>
-              <CardItem
-                translateZ={20}
-                className=" w-auto justify-end flex py-4 "
-              >
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="group bg-no border-2 hover:border-none hover:bg-white hover:text-secondarycolor transition-all"
-                >
-                  <GearIcon className="h-7 w-7 text-white group-hover:text-secondarycolor transition-all" />
-                </Button>
-              </CardItem>
-            </CardBody>
-          </CardContainer>
-        </AnimatedDiv>
-        <AnimatedDiv direction="right" duration={0.8} className="col-span-2 ">
-          <div className=" bg-secondarycolor p-5 ">
-            <h1>Recent purchases</h1>
-            <div>
-              {orderHistory?.map((order) => (
-                <Card
-                  key={order.id}
-                  title={order.event_title}
-                  style={{ width: 300 }}
-                >
-                  <p>Booking Date: {formatDate(order.booking_date)}</p>
-                  <p>Total Ticket: {order.total_ticket}</p>
-                  <p>Total Price: {order.total_price}</p>
-                  <h2>Tickets:</h2>
-                  {order.ticket_details?.map((ticket) => (
-                    <p key={ticket.ticket_id}>
-                      Category: {ticket.category} - Price: ${ticket.price} -
-                      Quantity: {ticket.quantity}
-                    </p>
-                  ))}
-                </Card>
-              ))}
-            </div>
-          </div>
-        </AnimatedDiv>
+        <EditProfile  />
+
+        <RecentPurchase />
+        
         <AnimatedDiv direction="top" duration={0.8}>
           <div className="flex flex-col items-center justify-center bg-secondarycolor p-5 text-white rounded-xl">
             <div className="border-4 p-2 rounded-lg w-full ">

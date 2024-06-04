@@ -72,11 +72,11 @@ export default function Home() {
     }
 
     return (
-        <div className="font-poppins bg-primarycolor ">
+        <div className="font-poppins bg-primarycolor p-10">
             <Hero />
             <EventPopular />
             <EventCategory />
-            <div className="h-screen"></div>
+      
         </div>
     );
 }

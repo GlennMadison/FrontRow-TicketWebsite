@@ -130,24 +130,35 @@ const Payment = () => {
         <>
             <div className="h-screen flex items-center justify-center">
                 <div className="grid gap-4 ">
-                    <div className="bg-gradient-to-tr from-orange-500 to-secondarycolor rounded-xl h-full w-full">
-                        <div className="flex-col  items-center p-4">
-                            <h1 className="text-3xl text-white font-bold pb-2 px-2">
-                                Payment
-                            </h1>
-
-                            <div className="text-white p-2 rounded-lg flex justify-between">
-                                <h1 className="text-4xl font-semibold">
-                                    {events?.title}
+                    <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{
+                            delay: 0.5,
+                            duration: 1,
+                            ease: "easeIn",
+                        }}
+                        className="object-contain overflow-hidden"
+                    >
+                        <div className="bg-gradient-to-tr from-orange-500 to-secondarycolor rounded-xl h-full w-full">
+                            <div className="flex-col  items-center p-4">
+                                <h1 className="text-3xl text-white font-bold pb-2 px-2">
+                                    Payment
                                 </h1>
 
-                                <h1 className="text-secondarycolor text-xl bg-white p-2 rounded-lg">
-                                    {formatDate(events?.start_date)} -{" "}
-                                    {formatDate(events?.end_date)}
-                                </h1>
+                                <div className="text-white p-2 rounded-lg flex justify-between">
+                                    <h1 className="text-4xl font-semibold">
+                                        {events?.title}
+                                    </h1>
+
+                                    <h1 className="text-secondarycolor text-xl bg-white p-2 rounded-lg">
+                                        {formatDate(events?.start_date)} -{" "}
+                                        {formatDate(events?.end_date)}
+                                    </h1>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                     <div className="grid gap-4 grid-cols-2  ">
                         <div className="bg-gradient-to-r from-secondarycolor to-orange-500 p-2 rounded-3xl">
                             <div className="flex flex-col justify-between w-[30vw] bg-white h-[18vw] rounded-3xl p-4 px-8 shadow-lg shadow-secondarycolor object-contain overflow-hidden ">
@@ -264,52 +275,20 @@ const Payment = () => {
                                 </div>
                             </div>
                         </div>
-                        <AnimatePresence>
-                            {ticketOrders.length !== 0 && (
-                                <div>
-                                    {ticketOrders.length !== 0 && (
-                                        <motion.a
-                                            key="checkoutButton"
-                                            href="#"
-                                            className={`group block h-[2vw] border-secondarycolor border-4 rounded-xl hover:border-none hover:bg-secondarycolor transition-all animate-slide-down`}
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{
-                                                opacity: 0,
-                                                transition: { duration: 0.5 },
-                                            }}
-                                        >
-                                            <motion.div
-                                                className="flex justify-center h-full"
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95 }}
-                                            >
-                                                <Dialog>
-                                                    <DialogTrigger asChild>
-                                                        <button className="text-secondarycolor text-xl group-hover:text-white">
-                                                            Checkout
-                                                        </button>
-                                                    </DialogTrigger>
-                                                    <DialogContent className="sm:max-w-[425px] border-secondarycolor  border-2  ">
-                                                        <div className="grid grid-rows-1 gap-4 ">
-                                                            <ClickTextCapt />
 
-                                                            <Button
-                                                                variant="outline"
-                                                                className="border-secondarycolor text-secondarycolor border-2 w-full "
-                                                                type="submit"
-                                                            >
-                                                                Submit
-                                                            </Button>
-                                                        </div>
-                                                    </DialogContent>
-                                                </Dialog>
-                                            </motion.div>
-                                        </motion.a>
-                                    )}
+                        {ticketOrders.length !== 0 && (
+                            <div className="flex  items-center justify-center border-2 p-2 rounded-lg border-secondarycolor">
+                                <div className="text-white px-5">
+                                    <h1 className="text-3xl">Checkout</h1>
+                                    <p className="">
+                                        Please verify your payment
+                                    </p>
                                 </div>
-                            )}
-                        </AnimatePresence>
+                                <div className="flex-col items-center justify-end">
+                                    <ClickTextCapt />
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

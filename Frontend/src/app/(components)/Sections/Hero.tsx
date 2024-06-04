@@ -71,16 +71,16 @@ export default function Hero() {
     }
 
     return (
-        <div className="h-auto flex justify-center items-center p-10">
+        <div className="h-auto flex justify-center items-center ">
             <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
                 transition={{
                     delay: 0.5,
-                    duration: 1,
-                    ease: "easeInOut",
+                    duration: 1, 
+                    ease: "easeIn", 
                 }}
-                className="object-contain overflow-hidden "
+                className="object-contain overflow-hidden"
             >
                 <div className="flex flex-col   justify-between items-center p-10  border-secondarycolor rounded-2xl border-4 cursor-grab ">
                     <div className="py-3  ">

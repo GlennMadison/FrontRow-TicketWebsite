@@ -34,7 +34,7 @@ export function PopularEvent({ selectedRegion }: PopularEventProps) {
     useEffect(() => {
         const fetchEvents = async () => {
             const session = await getSession();
-            const regionToFetch = selectedRegion || "Bali"; 
+            const regionToFetch = selectedRegion || "Jakarta"; 
 
             try {
                 const token = session.password;

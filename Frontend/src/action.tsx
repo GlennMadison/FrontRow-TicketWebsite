@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 
+
 export const getSession = async () => {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
   if (!session.isLoggedIn) {

@@ -179,38 +179,6 @@ func DeleteAccount(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": account})
 }
 
-// func UpdateAccount(c *gin.Context) {
-// 	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-// 	var account models.User
-
-// 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	if err := c.BindJSON(&account); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	if err := validate.Struct(account); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	account.ID = id
-
-// 	result, err := accountCollection.ReplaceOne(ctx, bson.M{"_id": id}, account)
-// 	if err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-// 		return
-// 	}
-
-// 	defer cancel()
-// 	c.JSON(http.StatusOK, gin.H{"data": result})
-// }
-
 func UpdateAccount(c *gin.Context) {
     var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
     var updateAccount models.User
@@ -233,19 +201,19 @@ func UpdateAccount(c *gin.Context) {
     if updateAccount.Email != nil {
         updateFields["email"] = updateAccount.Email
     }
-	if updateAccount.Password != nil {
-		password :=	hashPassword(*updateAccount.Password)
-		updateFields["password"] = password
-	}
-	if updateAccount.Phone != nil {
-		updateFields["phone"] = updateAccount.Phone
-	}
-	if updateAccount.Avatar != nil {
-		updateFields["avatar"] = updateAccount.Avatar
-	}
-	if updateAccount.Age != nil {
-		updateFields["age"] = updateAccount.Age
-	}
+    if updateAccount.Password != nil {
+        password :=    hashPassword(*updateAccount.Password)
+        updateFields["password"] = password
+    }
+    if updateAccount.Phone != nil {
+        updateFields["phone"] = updateAccount.Phone
+    }
+    if updateAccount.Avatar != nil {
+        updateFields["avatar"] = updateAccount.Avatar
+    }
+    if updateAccount.Age != nil {
+        updateFields["age"] = updateAccount.Age
+    }
 
     updateFields["updatedat"] = time.Now()
     updateResult := accountCollection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": updateFields}, options.FindOneAndUpdate().SetReturnDocument(options.After))

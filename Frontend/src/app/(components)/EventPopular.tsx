@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { PopularEvent } from "./Sections/PopularEvent"; // Adjust the path as necessary
-import { Combobox } from "./Combobox"; // Adjust the path as necessary
+import { PopularEvent } from "./Sections/PopularEvent"; 
+import { Combobox } from "./Combobox"; 
 
 export function EventPopular() {
     const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
 
     return (
-        <div>
+        <div className="pt-10">
             <Combobox selectedRegion={selectedRegion} onRegionChange={setSelectedRegion} />
             <PopularEvent selectedRegion={selectedRegion} />
         </div>

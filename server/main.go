@@ -27,12 +27,12 @@ func main() {
 	routes.UserRoutes(router)
 	router.GET("/captcha", gin.WrapF(captcha.GetClickBasicCaptData))
 	router.POST("/verif", gin.WrapF(captcha.CheckClickData))
-	router.Use(middleware.Authentication()) 
-
+	
 	routes.EventRoutes(router)
 	routes.BookingRoutes(router)
 	
-
+	
+	router.Use(middleware.Authentication()) 
 	router.Run(":" + port)
 }
 

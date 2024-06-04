@@ -167,29 +167,3 @@ func GetOrdersByUserID(c *gin.Context) {
     defer cancel()
     c.JSON(http.StatusOK, gin.H{"data": orders})
 }
-
-func Refund (c *gin.Context) {
-	var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-	var order models.Booking
-
-	id, err := primitive.ObjectIDFromHex(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	err = orderCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&order)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	result, err := orderCollection.DeleteOne(ctx, bson.M{"_id": id})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	defer cancel()
-	c.JSON(http.StatusOK, gin.H{"data": result})
-}
