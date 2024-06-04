@@ -20,4 +20,5 @@ type User struct{
 	Age			*int				`json:"age"`
 	CreatedAt   time.Time			`json:"created_at"`
 	UpdatedAt   time.Time			`json:"updated_at"`
+	Point 		*int				`json:"point"`
 }

@@ -1,13 +1,55 @@
+"use client"
+import axios from "axios";
 import { useEffect, useState } from "react";
+import { getSession } from "@/action";
+import jwt from "jsonwebtoken";
 
 export default function Points() {
+
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            const session = await getSession();
+            try {
+                const token = session.password;
+
+                const decodeToken = jwt.decode(token);
+
+                const userId = decodeToken?.Uid;
+                const response = await axios.get<Event | Event[]>(
+                    `http://localhost:5000/account/${userId}`,
+                    {
+                        headers: {
+                            token: token,
+                        },
+                    }
+                );
+
+                const user = response.data.data;
+                console.log(user);
+
+                setUser(user);
+            } catch (error) {
+                console.error("There was an error fetching the events!", error);
+                setError("There was an error fetching the events");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, []);
+
     return (
         <div className="min-h-screen p-10 text-white flex flex-col items-center">
             <div className=" p-2 rounded-lg w-[60vw] bg-secondarycolor   ">
                 <h1 className="text-center font-semibold text-[1vw]">
                     FrontRow Points
                 </h1>
-                <h2 className="text-center font-bold text-[3vw]">1423</h2>
+                <h2 className="text-center font-bold text-[3vw]">{user?.point ?? 0}</h2>
             </div>
             <div className="py-6">
                 <h1 className="text-4xl text-center ">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getSession } from "@/action";
 import { EventCard } from "../EventCard"; // Adjust the path as necessary
-
+import AnimatedDiv from "../simpleAnimate";
 interface Ticket {
     ID: string;
     category: string;
@@ -22,10 +22,6 @@ interface Event {
     tickets: Ticket[];
 }
 
-interface EventCardProps {
-    event: Event | undefined;
-}
-
 interface PopularEventProps {
     selectedRegion: string | null;
 }
@@ -38,8 +34,8 @@ export function PopularEvent({ selectedRegion }: PopularEventProps) {
     useEffect(() => {
         const fetchEvents = async () => {
             const session = await getSession();
-            const regionToFetch = selectedRegion || "Bali"; // Use "Bali" as the default region if no region is selected
-            
+            const regionToFetch = selectedRegion || "Bali"; 
+
             try {
                 const token = session.password;
                 const response = await axios.get<Event | Event[]>(
@@ -76,17 +72,16 @@ export function PopularEvent({ selectedRegion }: PopularEventProps) {
     return (
         <div className="h-auto flex justify-center items-center">
             <div className="flex-col justify-center p-4 overflow-hidden w-[80vw] rounded-2xl">
-                <div className="px-4 py-3">
-                    {/* Removed Combobox here as it is handled by the parent */}
-                </div>
                 <div className="flex justify-evenly">
                     {events?.slice(0, 4).map((event) => (
-                        <div
-                            key={event.ID}
-                            className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"
-                        >
-                            <EventCard event={event} />
-                        </div>
+                        <AnimatedDiv direction="top" >
+                            <div
+                                key={event.ID}
+                                className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"
+                            >
+                                <EventCard event={event} />
+                            </div>
+                        </AnimatedDiv>
                     ))}
                 </div>
             </div>

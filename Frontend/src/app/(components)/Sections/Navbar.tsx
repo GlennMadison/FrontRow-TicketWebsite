@@ -76,6 +76,7 @@ const Navbar: React.FC = () => {
     return (
         <div className="flex-col justify-center items-center">
             <nav className="flex items-center justify-between px-10 py-5  ">
+                
                 <div
                     className="flex items-center cursor-pointer"
                     onClick={handleHome}

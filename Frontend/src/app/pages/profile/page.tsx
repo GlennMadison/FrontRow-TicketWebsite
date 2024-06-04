@@ -11,7 +11,6 @@ import { Card } from "antd";
 import { Button } from "@/components/ui/button";
 import { GearIcon } from "@radix-ui/react-icons";
 import AnimatedDiv from "@/app/(components)/simpleAnimate";
-import { get } from "lodash";
 
 interface User {
     ID: string;
@@ -22,6 +21,7 @@ interface User {
     createdAt: string;
     phone: string;
     age: number;
+    point: number;
 }
 
 interface Event {
@@ -73,6 +73,7 @@ const ProfilePage = () => {
                 );
 
                 const user = response.data.data;
+                console.log(user);
 
                 setUser(user);
             } catch (error) {
@@ -85,6 +86,9 @@ const ProfilePage = () => {
 
         fetchEvents();
     }, []);
+
+    useEffect(() => {
+    }, [user]);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -231,7 +235,7 @@ const ProfilePage = () => {
                                 FrontRow Points
                             </h1>
                             <h2 className="text-center font-bold text-[3vw]">
-                                1423
+                                {user?.point ?? 0}
                             </h2>
                         </div>
                         <div className="w-full ">
