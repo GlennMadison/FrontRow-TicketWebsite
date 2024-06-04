@@ -1,8 +1,6 @@
-"use client";
-
-import * as React from "react";
-import { Map, MapPin } from "react-feather";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { getSession } from "@/action";
 import { Button } from "@/components/ui/button";
 import {
     Command,
@@ -17,33 +15,52 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import { MapPin } from "react-feather";
 
 type Status = {
     value: string;
     label: string;
 };
 
-const statuses: Status[] = [
-    {
-        value: "jakarta",
-        label: "Jakarta",
-    },
-    {
-        value: "Bandung",
-        label: "Bandung",
-    },
-];
+interface ComboboxProps {
+    selectedRegion: string | null;
+    onRegionChange: (region: string | null) => void;
+}
 
-const currentLocation = statuses[0];
+export function Combobox({ selectedRegion, onRegionChange }: ComboboxProps) {
+    const [statuses, setStatuses] = useState<Status[]>([]);
+    const currentLocation = statuses.find(status => status.label === selectedRegion);
+    const tempLocation = statuses[0]?.label;
+    useEffect(() => {
+        const fetchLocations = async () => {
+            const session = await getSession();
+            try {
+                const token = session.password;
+                const response = await axios.get("http://localhost:5000/GetRegion", {
+                    headers: {
+                        token: token,
+                    },
+                });
+                const locationData = response.data.data.map(
+                    (region: string, index: number) => ({
+                        value: (index + 1).toString(),
+                        label: region,
+                    })
+                );
 
-export function Combobox() {
-    const [open, setOpen] = React.useState(false);
-    const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-        null
-    );
+                setStatuses(locationData);
+            } catch (error) {
+                console.error("There was an error fetching the locations!", error);
+            }
+        };
+
+        fetchLocations();
+    }, []);
+
+    const [open, setOpen] = useState(false);
 
     return (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 justify-center">
             <p className="text-3xl text-white font-semibold">Popular Event in</p>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -51,10 +68,10 @@ export function Combobox() {
                         variant="outline"
                         className="justify-center  bg-primarycolor text-white text-2xl border-secondarycolor border-2 "
                     >
-                        {selectedStatus ? (
-                            <>{selectedStatus.label}</>
-                        ) : (
+                        {currentLocation ? (
                             <>{currentLocation.label}</>
+                        ) : (
+                            <>{tempLocation}</>
                         )}
                     </Button>
                 </PopoverTrigger>
@@ -69,11 +86,8 @@ export function Combobox() {
                                         key={status.value}
                                         value={status.value}
                                         onSelect={(value) => {
-                                            setSelectedStatus(
-                                                statuses.find(
-                                                    (priority) =>
-                                                        priority.value === value
-                                                ) || null
+                                            onRegionChange(
+                                                statuses.find(status => status.value === value)?.label || null
                                             );
                                             setOpen(false);
                                         }}

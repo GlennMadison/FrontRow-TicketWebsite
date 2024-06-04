@@ -1,9 +1,7 @@
-import { Combobox } from "../Combobox";
-import { EventCard } from "../EventCard";
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getSession } from "@/action";
+import { EventCard } from "../EventCard"; // Adjust the path as necessary
 
 interface Ticket {
     ID: string;
@@ -28,7 +26,11 @@ interface EventCardProps {
     event: Event | undefined;
 }
 
-export function PopularEvent() {
+interface PopularEventProps {
+    selectedRegion: string | null;
+}
+
+export function PopularEvent({ selectedRegion }: PopularEventProps) {
     const [events, setEvents] = useState<Event[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -36,22 +38,21 @@ export function PopularEvent() {
     useEffect(() => {
         const fetchEvents = async () => {
             const session = await getSession();
+            const regionToFetch = selectedRegion || "Bali"; // Use "Bali" as the default region if no region is selected
+            
             try {
-
-
                 const token = session.password;
-
                 const response = await axios.get<Event | Event[]>(
-                    "http://localhost:5000/events",
+                    `http://localhost:5000/filterRegion/${regionToFetch}`,
                     {
                         headers: {
-                            token: token, 
+                            token: token,
                         },
                     }
                 );
 
                 const eventData = response.data.data;
-                
+
                 setEvents(eventData);
             } catch (error) {
                 console.error("There was an error fetching the events!", error);
@@ -62,9 +63,7 @@ export function PopularEvent() {
         };
 
         fetchEvents();
-    }, []);
-
-    
+    }, [selectedRegion]);
 
     if (loading) {
         return <div>Loading...</div>;
@@ -73,14 +72,15 @@ export function PopularEvent() {
     if (error) {
         return <div>{error}</div>;
     }
+
     return (
         <div className="h-auto flex justify-center items-center">
             <div className="flex-col justify-center p-4 overflow-hidden w-[80vw] rounded-2xl">
                 <div className="px-4 py-3">
-                    <Combobox />
+                    {/* Removed Combobox here as it is handled by the parent */}
                 </div>
                 <div className="flex justify-between">
-                    {events.slice(0, 4).map((event) => (
+                    {events?.slice(0, 4).map((event) => (
                         <div
                             key={event.ID}
                             className="drop-shadow-xl hover:shadow-primaryred hover:shadow-lg rounded-lg transition-all duration-600"

@@ -15,8 +15,9 @@ import axios from "axios";
 import { getSession } from "@/action";
 import { set } from "lodash";
 import DatePicker from "react-datepicker";
+// npm install react-datepicker
+// npm install --save-dev @types/react-datepicker
 import "react-datepicker/dist/react-datepicker.css";
-import { Slider } from "@mui/material";
 
 type Option = {
   value: string;

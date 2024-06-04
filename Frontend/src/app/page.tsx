@@ -5,6 +5,7 @@ import { PopularEvent } from "./(components)/Sections/PopularEvent";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { getSession } from "@/action";
+import { EventPopular } from "./(components)/EventPopular";
 interface Ticket {
   ID: string;
   category: string;
@@ -73,7 +74,7 @@ export default function Home() {
     return (
         <div className="font-poppins bg-primarycolor ">
             <Hero />
-            <PopularEvent />
+            <EventPopular />
             <EventCategory />
             <div className="h-screen"></div>
         </div>
