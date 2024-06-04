@@ -34,7 +34,7 @@ func CreateOrder(c *gin.Context) {
 	}
 
 	order.ID = primitive.NewObjectID()
-
+	order.TotalPrice = CalculateTotalPrice(order)
 	result, err := orderCollection.InsertOne(ctx, order)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -46,6 +46,8 @@ func CreateOrder(c *gin.Context) {
 	}
 
 	res, err := bookingTicketCollection.InsertMany(ctx, ticketInterfaces)
+	
+
 
 	defer cancel()
 	c.JSON(http.StatusOK, gin.H{"data": result})
@@ -117,12 +119,12 @@ func GetOrders(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Total Price": totalPrice})
 	}
 
-	var totalPrice = CalculateTotalPrice(orders[2])
+	// var totalPrice = CalculateTotalPrice(orders[2])
 	defer cancel()
 	c.JSON(http.StatusOK, gin.H{"data": orders})
-	c.JSON(http.StatusOK, gin.H{"len": len(orders)})
-	c.JSON(http.StatusOK, gin.H{"testing": orders[2].Tickets})
-	c.JSON(http.StatusOK, gin.H{"Total Price": totalPrice})
+	// c.JSON(http.StatusOK, gin.H{"len": len(orders)})
+	// c.JSON(http.StatusOK, gin.H{"testing": orders[2].Tickets})
+	// c.JSON(http.StatusOK, gin.H{"Total Price": totalPrice})
 }
 
 func DeleteOrder(c *gin.Context) {

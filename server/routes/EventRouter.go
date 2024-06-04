@@ -18,4 +18,5 @@ func EventRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.GET("/GetRangePrice/:minPrice/:maxPrice", controller.GetEventPricesRange)
 	incomingRoutes.GET("/GetEventRangeDate/:startDate/:endDate", controller.GetEventDateRange)
 	incomingRoutes.GET("/GetFilterEvent", controller.GetFilteredEvents)
+	incomingRoutes.GET("/GetTicket/:id", controller.GetTicketID)
 }

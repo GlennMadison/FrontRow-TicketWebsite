@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import GoCaptcha from 'go-captcha-react';
 import { Popover } from 'antd';
+import GoCaptcha from 'go-captcha-react';
 import { useClickHandler } from "./Hooks/useClickText";
 
 function ClickTextCapt() {

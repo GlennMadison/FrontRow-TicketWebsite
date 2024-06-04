@@ -13,4 +13,5 @@ type Booking struct{
 	TotalTicket *int				`json:"total_ticket"`
 	BookingDate time.Time				`json:"booking_date"`
 	Tickets 	[]BookingTicket			`json:"tickets"`
+	TotalPrice  float64			`json:"total_price"`
 }
