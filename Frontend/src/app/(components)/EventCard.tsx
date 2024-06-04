@@ -2,7 +2,7 @@
 
 
 import { useRouter } from 'next/navigation';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -12,6 +12,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { set } from 'lodash';
 
 interface Ticket {
     ID: string;
@@ -38,6 +39,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
+    const [smallestPrice, setSmallestPrice] = useState<number | null>(null);
     
     if (!event) {
         console.error("Event is undefined or has missing properties!");
@@ -59,6 +61,14 @@ export function EventCard({ event }: EventCardProps) {
         router.push(`/pages/event?Id=${ID}`);
     };
 
+    useEffect(() => {
+        const getSmallestTicketPrice = () => {
+            const ticketPrices = event.tickets.map((ticket) => ticket.price);
+            return Math.min(...ticketPrices);
+        }
+        setSmallestPrice(getSmallestTicketPrice());
+    }, []);
+
     return (
         <Card className="w-[350px] flex flex-col border-4 bg-gradient-to-br from-secondarycolor to-orange-500 border-none  shadow-lg shadow-secondarycolor ">
             <CardHeader className="flex flex-col ">
@@ -69,7 +79,7 @@ export function EventCard({ event }: EventCardProps) {
                 <CardDescription className="text-md ">
                     <div className="text-white truncate">{location} </div>
                     <div className="flex justify-between items-center pt-5 text-white">
-                        <div className="font-semibold">PricePlaceholder</div>
+                        <div className="font-semibold">Rp. {smallestPrice},00</div>
                         <div>{formattedDate}</div>
                     </div>
                 </CardDescription>

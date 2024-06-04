@@ -24,7 +24,7 @@ export function CarouselMultiple({
     >
       <CarouselContent>
         {React.Children.map(children, (child, index) => (
-          <CarouselItem key={index} className={carouselItemClass}>
+          <CarouselItem key={index} className={carouselItemClass + "px-10"}>
             {child}
             
           </CarouselItem>

@@ -79,7 +79,7 @@ export function PopularEvent({ selectedRegion }: PopularEventProps) {
                 <div className="px-4 py-3">
                     {/* Removed Combobox here as it is handled by the parent */}
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-evenly">
                     {events?.slice(0, 4).map((event) => (
                         <div
                             key={event.ID}

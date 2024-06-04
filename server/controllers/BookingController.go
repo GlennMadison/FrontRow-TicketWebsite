@@ -143,3 +143,25 @@ func DeleteOrder(c *gin.Context) {
 	defer cancel()
 	c.JSON(http.StatusOK, gin.H{"data": result})
 }
+
+func GetOrdersByUserID(c *gin.Context) {
+    var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+    var orders []models.Booking
+
+	id, err := primitive.ObjectIDFromHex(c.Param("userID"))
+    cursor, err := orderCollection.Find(ctx, bson.M{"userid": id})
+    if err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    defer cursor.Close(ctx)
+    for cursor.Next(ctx) {
+        var order models.Booking
+        cursor.Decode(&order)
+        orders = append(orders, order)
+    }
+
+    defer cancel()
+    c.JSON(http.StatusOK, gin.H{"data": orders})
+}
