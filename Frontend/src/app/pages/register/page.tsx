@@ -13,7 +13,7 @@ import axios from "axios";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import { useRouter } from "next/navigation";
 const formSchema = z.object({
     username: z
         .string()
@@ -45,7 +45,7 @@ interface FormValues {
 
 export function RegisterForm() {
     const [errors, setErrors] = useState("");
-
+    const router = useRouter();
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -63,6 +63,7 @@ export function RegisterForm() {
             formSchema.parse(newFormValues);
             console.log("Form values are valid:", newFormValues);
             axios.post("http://localhost:5000/register", newFormValues);
+            router.push("/pages/login")
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const fieldErrors: Record<string, string> = {};
@@ -85,6 +86,11 @@ export function RegisterForm() {
         console.log(errors);
         console.log(newFormValues);
     };
+
+    const handleSignIn = () => {
+        event.preventDefault();
+        router.push("/pages/login");
+    }
 
     return (
         <motion.div
@@ -200,6 +206,7 @@ export function RegisterForm() {
                                     ease: "easeInOut",
                                 }}
                             >
+                                
                                 <LabelInputContainer className="mb-4">
                                     <AceLabel htmlFor="password">Password</AceLabel>
                                     <Input
@@ -228,7 +235,7 @@ export function RegisterForm() {
                                     Accept terms and conditions
                                 </AceLabel>
                             </div>
-                            <Button variant="link" className="p-0" >Sign in</Button>
+                            <Button variant="link" className="p-0" onClick={handleSignIn} >Sign in</Button>
                         </div>
                         <button
                             className="bg-gradient-to-br relative group/btn from-secondarycolor  dark:to-yellow-600 to-yellow-700 block dark:bg-yellow-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"

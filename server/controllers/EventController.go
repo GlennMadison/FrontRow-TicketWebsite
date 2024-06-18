@@ -308,6 +308,7 @@ func GetFilteredEvents(c *gin.Context) {
     defer cancel()
     
     var events []models.Event
+	
     region := c.Query("region")
     label := c.Query("label")
     startTime := c.Query("startTime")
@@ -315,8 +316,6 @@ func GetFilteredEvents(c *gin.Context) {
     minPrice := c.Query("minPrice")
     maxPrice := c.Query("maxPrice")
 
-
-    
     filter := bson.M{}
     
     if region != "" {

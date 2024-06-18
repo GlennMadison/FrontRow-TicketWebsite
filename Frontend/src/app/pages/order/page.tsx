@@ -69,12 +69,12 @@ const Payment = () => {
         setTicketOrders(decodedTicketOrders);
     }, []);
 
-    
-
     const [ticketOrders, setTicketOrders] = useState<TicketOrder[]>([]);
     const [events, setEvents] = useState<Event>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
+    
 
     useEffect(() => {
         const fetchEvents = async () => {

@@ -34,7 +34,7 @@ func CreateOrder(c *gin.Context) {
 	}
 
 	order.ID = primitive.NewObjectID()
-	order.TotalPrice = CalculateTotalPrice(order)
+	// order.TotalPrice = CalculateTotalPrice(order)
 	result, err := orderCollection.InsertOne(ctx, order)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

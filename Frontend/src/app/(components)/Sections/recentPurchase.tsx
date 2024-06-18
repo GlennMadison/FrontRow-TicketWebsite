@@ -12,7 +12,7 @@ interface BookingTicket {
 }
 
 interface OrderHistory {
-    id: string;
+    ID: string;
     event_id: string;
     total_ticket: number;
     booking_date: string;
@@ -116,6 +116,8 @@ export default function RecentPurchase() {
 
         
             setOrderHistory(enrichedOrders);
+            console.log(enrichedOrders[0].ID);
+            console.log(enrichedOrders);
         } catch (error) {
             setError("There was an error fetching the History");
         } finally {
@@ -123,7 +125,14 @@ export default function RecentPurchase() {
         }
     };
 
-    const handleTicketRefund = async (ticketId: string) => {};
+        const handleTicketRefund = async (orderId: string) => {
+            console.log("Refunding ticket", orderId);
+            try {
+                await axios.delete(`http://localhost:5000/order/${orderId}`);
+            } catch (error) {
+                console.error("Error while refunding ticket", error);
+            }
+        };
 
     const handleDetail = async (eventId: string) => {
         router.push(`/pages/event?Id=${eventId}`);
@@ -135,7 +144,7 @@ export default function RecentPurchase() {
                 <h1 className="text-3xl text-white ">Recent Purchases</h1>
                 <ScrollArea className="h-[29vw]">
                     {orderHistory?.map((order , index) => (
-                        <AnimatedDiv key={order.id} className="py-2" delay={index * 0.1}>
+                        <AnimatedDiv key={order.ID} className="py-2" delay={index * 0.1}>
                         
                             <div className="bg-white p-4 rounded-lg">
                                 <div className="flex justify-between">
@@ -158,7 +167,7 @@ export default function RecentPurchase() {
                                             <Button
                                                 className="bg-white text-secondarycolor border-2 border-secondarycolor"
                                                 variant="outline"
-                                                onClick={handleTicketRefund}
+                                                onClick={() => handleTicketRefund(order.ID)}
                                             >
                                                 Refund
                                             </Button>

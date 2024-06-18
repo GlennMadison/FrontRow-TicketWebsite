@@ -14,9 +14,14 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
     const [state, formAction] = useFormState<any, FormData>(login, undefined);
+    const router = useRouter();
+    const HandleSignUp = () => {
+        router.push("/pages/register");
+    }
 
     return (
         <motion.div
@@ -96,7 +101,7 @@ const LoginForm = () => {
                                     Remember Me?
                                 </Label>
                             </div>
-                            <Button variant="link" className="p-0" >Sign up</Button>
+                            <Button variant="link" className="p-0" onClick={HandleSignUp} >Sign up</Button>
                         </div>
                         {state?.error && (
                             <p className="text-sm font-light text-red-700 py-2">

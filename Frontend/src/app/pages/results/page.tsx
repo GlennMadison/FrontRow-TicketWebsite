@@ -67,7 +67,10 @@ const ResultPage = () => {
         <div className="min-h-screen p-10">
             {loading ? (
                 <h1>Loading...</h1>
-            ) : (
+            ) : events?.length === 0 ? (
+                <h1 className="text-white">No results found for '{searchQuery}'</h1>
+            ) :
+            (
                 <div className="text-white ">
                     {events?.map((event) => (
                         <div
