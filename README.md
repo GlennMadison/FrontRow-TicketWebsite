@@ -4,7 +4,7 @@ This is the API documentation for the Go backend project. The API handles accoun
 
 ## Base URL
 
-`http://localhost:8080`
+`http://localhost:5000`
 
 ## Endpoints
 
